@@ -8,6 +8,9 @@
 
 The application processes an image file, generates a descriptive alt text, and saves it to a text file. Additionally, it copies the generated alt text to the clipboard for easy pasting.
 
+![Application running](./images/01DemoApp.png)
+
+
 ## Requirements
 
 - [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0) or later
@@ -51,13 +54,25 @@ The main functionality of the AltTextImageGeneratorWinForm application is implem
 
 To use the application, run the following command in the terminal:
 
+```bash
+AltTextImageGenerator <fileLocation> 
+```
+
+Where `<fileLocation>` is the path to the image file you want to process. The application will generate the alt text, save it to a text file with the same name as the image file, and copy the alt text to the clipboard.
+
+### Error Handling
+
+The application includes basic error handling to display error messages in case of exceptions, such as unsupported file formats or issues with the Ollama service.
+
+By using AltTextImageGeneratorWinForm, you can quickly and easily generate descriptive alt text for your images, enhancing accessibility and usability in various applications.
+
 
 ## Resources
 
-- [Deploy a .NET Aspire project to Azure Container Apps using the Azure Developer CLI (in-depth guide)](https://learn.microsoft.com/dotnet/aspire/deployment/azure/aca-deployment-azd-in-depth)
-
-- [Aspiring .NET Applications with Azure OpenAI](https://learn.microsoft.com/shows/azure-developers-dotnet-aspire-day-2024/aspiring-dotnet-applications-with-azure-openai)
+- [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
+- [Ollama](https://ollama.com/)
+- [Llama3.2-vision model](https://ollama.com/library/llama3.2-vision)
 
 ### Video Recordings
 
-[![Run eShopLite Semantic Search in Minutes with .NET Aspire & GitHub Codespaces 🚀](./images/90ytrunfromcodespaces.png)](https://youtu.be/T9HwjVIDPAE)
+Coming Soon!
