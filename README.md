@@ -29,6 +29,24 @@ To install Ollama, follow the instructions provided on the [Ollama website](http
 
 After installing Ollama, download the [Llama3.2-vision model](https://ollama.com/library/llama3.2-vision) by following the instructions on the Ollama website or using the Ollama CLI.
 
+## Example Usage
+
+To use the application, run the following command in the terminal:
+
+```bash
+AltTextImageGenerator <fileLocation> 
+```
+
+Where `<fileLocation>` is the path to the image file you want to process. The application will generate the alt text, save it to a text file with the same name as the image file, and copy the alt text to the clipboard.
+
+### Registering the Application in Windows
+
+To register the application and add a new right click meu to windows, run the following command in the terminal:
+
+```bash
+AltTextImageGenerator -r
+```
+
 ## Detailed Description of the Functionality
 
 The main functionality of the AltTextImageGeneratorWinForm application is implemented in the `Program.cs` file. Below is a detailed description of its key components:
@@ -50,22 +68,11 @@ The main functionality of the AltTextImageGeneratorWinForm application is implem
    - Determines the media type of the image based on its file extension.
    - Supports JPEG, PNG, and GIF formats.
 
-### Example Usage
-
-To use the application, run the following command in the terminal:
-
-```bash
-AltTextImageGenerator <fileLocation> 
-```
-
-Where `<fileLocation>` is the path to the image file you want to process. The application will generate the alt text, save it to a text file with the same name as the image file, and copy the alt text to the clipboard.
-
 ### Error Handling
 
 The application includes basic error handling to display error messages in case of exceptions, such as unsupported file formats or issues with the Ollama service.
 
 By using AltTextImageGeneratorWinForm, you can quickly and easily generate descriptive alt text for your images, enhancing accessibility and usability in various applications.
-
 
 ## Resources
 

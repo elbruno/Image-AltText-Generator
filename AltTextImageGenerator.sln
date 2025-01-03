@@ -1,10 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35617.110 d17.13
+VisualStudioVersion = 17.13.35617.110
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AltTextImageGenerator", "AltTextImageGenerator\AltTextImageGenerator.csproj", "{1BFAD8A2-A20E-460B-A2FE-A51D09B8D12C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AltTextImageGeneratorWinForm", "AltTextImageGeneratorWinForm\AltTextImageGeneratorWinForm.csproj", "{5A351A54-9EA1-417B-B7BC-929DFC52376B}"
 EndProject
 Global
@@ -13,10 +11,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1BFAD8A2-A20E-460B-A2FE-A51D09B8D12C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1BFAD8A2-A20E-460B-A2FE-A51D09B8D12C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1BFAD8A2-A20E-460B-A2FE-A51D09B8D12C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1BFAD8A2-A20E-460B-A2FE-A51D09B8D12C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5A351A54-9EA1-417B-B7BC-929DFC52376B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5A351A54-9EA1-417B-B7BC-929DFC52376B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A351A54-9EA1-417B-B7BC-929DFC52376B}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -1,4 +1,6 @@
 using Microsoft.Extensions.AI;
+using Microsoft.Win32;
+using System.Reflection;
 using TextCopy;
 
 namespace AltTextImageGeneratorWinForm
@@ -19,6 +21,14 @@ namespace AltTextImageGeneratorWinForm
             if (args.Length == 0 || args[0] == "-h")
             {
                 ShowHelp();
+                return;
+            }
+
+            if (args[0] == "-r")
+            {
+                var success = RegisterAppInWindowsMenus();
+                if (success)
+                    MessageBox.Show("Application registered in Windows menus.");
                 return;
             }
 
@@ -54,7 +64,8 @@ Generated alt text:
             var messageInfo = @"Usage: AltTextImageGenerator <fileLocation> 
 <fileLocation> the image to be processed and the Alt Text generated
 Options:  
--h Show help information";
+-h Show help information
+-r Register the app in Windows, to be show in the right click menu on images";
             MessageBox.Show(messageInfo, "Help Information");
         }
 
@@ -90,6 +101,49 @@ Options:
                 default:
                     throw new NotSupportedException($"File extension {extension} is not supported");
             }
+        }
+
+        static bool RegisterAppInWindowsMenus() 
+        {
+            var result = false;
+            try
+            {
+                // get the current app path
+                string appPath = Assembly.GetExecutingAssembly().Location;
+
+                // Define the application path (assumes the app is in the same folder as this script)
+                string command = $"\"{appPath}\" \"%1\"";
+
+                // File extensions to associate with the context menu
+                string[] imageExtensions = { ".jpg", ".jpeg", ".png", ".bmp", ".gif" };
+
+                foreach (var ext in imageExtensions)
+                {
+                    // Open or create the key for the file extension
+                    string extKeyPath = $@"Software\Classes\{ext}\shell\Generate Alt Text";
+                    using (RegistryKey extKey = Registry.CurrentUser.CreateSubKey(extKeyPath))
+                    {
+                        // Set the display name for the menu item
+                        extKey.SetValue(null, "Generate Alt Text");
+                    }
+
+                    // Add the command to run the app
+                    string commandKeyPath = $@"Software\Classes\{ext}\shell\Generate Alt Text\command";
+                    using (RegistryKey commandKey = Registry.CurrentUser.CreateSubKey(commandKeyPath))
+                    {
+                        commandKey.SetValue(null, command);
+                    }
+                }
+
+                result = true;
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show($@"Error while registering the app in Windows Context Menu.
+
+Error Details: {exc.Message}");
+            }
+            return result;
         }
     }
 }
