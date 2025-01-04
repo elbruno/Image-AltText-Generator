@@ -97,6 +97,12 @@ By using AltTextImageGeneratorWinForm, you can quickly and easily generate descr
 - [Ollama](https://ollama.com/)
 - [Llama3.2-vision model](https://ollama.com/library/llama3.2-vision)
 
+The app uses this packages to work with the Clipboard
+
+- [Clowd.Clipboard](https://github.com/clowd/Clowd.Clipboard)
+
+- [TextCopy](https://github.com/CopyText/TextCopy)
+
 ### Video Recordings
 
 Coming Soon!
