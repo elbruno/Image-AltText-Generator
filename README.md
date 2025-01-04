@@ -10,7 +10,6 @@ The application processes an image file, generates a descriptive alt text, and s
 
 ![Application running](./images/01DemoApp.png)
 
-
 ## Requirements
 
 - [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0) or later
@@ -29,7 +28,25 @@ To install Ollama, follow the instructions provided on the [Ollama website](http
 
 After installing Ollama, download the [Llama3.2-vision model](https://ollama.com/library/llama3.2-vision) by following the instructions on the Ollama website or using the Ollama CLI.
 
-## Example Usage
+## Running the app
+
+The following scenarios are supported by the application.
+
+***Important:** you need to have ollama running and the Llama3.2-vision model downloaded.*
+
+### Example Usage with images in the Clipboard
+
+If you have copied an image to the clipboard, just run the **AltTextImageGenerator** application
+
+The application will perform these steps:
+
+- Analyze the Clipboard
+- Store the image in this folder: current application location + "images" folder
+- Generate the alt text
+- Save it to a text file with the same name as the image file
+- Copy the alt text to the clipboard.
+
+### Example Usage with existing images
 
 To use the application, run the following command in the terminal:
 

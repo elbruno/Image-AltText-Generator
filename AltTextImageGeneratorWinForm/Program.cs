@@ -1,5 +1,7 @@
+using Clowd.Clipboard;
 using Microsoft.Extensions.AI;
 using Microsoft.Win32;
+using System.Drawing.Imaging;
 using System.Reflection;
 using TextCopy;
 
@@ -18,7 +20,12 @@ namespace AltTextImageGeneratorWinForm
             Application.SetCompatibleTextRenderingDefault(false);
 
 
-            if (args.Length == 0 || args[0] == "-h")
+            if (args.Length == 0)
+            {
+                await ValidateIfClipboardIsImageAsync();
+                return;
+            }
+            if (args[0] == "-h")
             {
                 ShowHelp();
                 return;
@@ -34,11 +41,21 @@ namespace AltTextImageGeneratorWinForm
 
             try
             {
-
                 string fileLocation = args[0];
+                await ProcessImageFile(fileLocation);
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show($"Error: {exc.Message}");
+            }
+        }
 
+        private static async Task ProcessImageFile(string fileLocation)
+        {
+            try
+            {
                 // generate the alt text for the image
-                string altText = await GenerateAltTextForImageAsync(fileLocation);                
+                string altText = await GenerateAltTextForImageAsync(fileLocation);
 
                 // create a new file with the alt text, with the name of the original file and the TXT extension
                 string altTextFileLocation = Path.ChangeExtension(fileLocation, ".txt");
@@ -56,6 +73,28 @@ Generated alt text:
             catch (Exception exc)
             {
                 MessageBox.Show($"Error: {exc.Message}");
+            }
+
+        }
+
+        private static async Task ValidateIfClipboardIsImageAsync()
+        {
+            var clipboardImg = await ClipboardGdi.GetImageAsync();
+
+            if (clipboardImg is not null)
+            {
+                // generate a random file name with the extension png
+                string tempFile = $"{Guid.NewGuid().ToString()}.png";
+
+                // get the current app location
+                string currentAppLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                string imagesFolder = Path.Combine(currentAppLocation, "images");
+                if (!Directory.Exists(imagesFolder))
+                    Directory.CreateDirectory(imagesFolder);
+                string tempFileFullPath = Path.Combine(imagesFolder, tempFile);
+                clipboardImg.Save(tempFileFullPath); //, ImageFormat.Png);
+
+                await ProcessImageFile(tempFileFullPath);
             }
         }
 
@@ -103,7 +142,7 @@ Options:
             }
         }
 
-        static bool RegisterAppInWindowsMenus() 
+        static bool RegisterAppInWindowsMenus()
         {
             var result = false;
             try
