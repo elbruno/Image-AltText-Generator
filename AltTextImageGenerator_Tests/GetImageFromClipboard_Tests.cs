@@ -4,7 +4,7 @@ using Clowd.Clipboard;
 namespace AltTextImageGenerator_Tests
 {
     [TestClass]
-    public sealed class ImageAltTextGenerator_Tests
+    public sealed class GetImageFromClipboard_Tests
     {
         [TestMethod]
         public async Task GetImageFromClipboardAndSaveItToDisk_ImageInClipboard_ReturnsFilePath()

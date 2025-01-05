@@ -98,7 +98,7 @@ Generated alt text:
         return imageAnalysis.Message.Text;
     }
 
-    private string GetMediaType(string imageLocation)
+    public string GetMediaType(string imageLocation)
     {
         // Logic to determine the media type based on the file extension
         string extension = Path.GetExtension(imageLocation).ToLower();
