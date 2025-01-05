@@ -1,0 +1,24 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="AltTextImageGeneratorWinForm.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="UseOllama" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="OllamaUrl" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://localhost:11434/</Value>
+    </Setting>
+    <Setting Name="OllamaModelId" Type="System.String" Scope="User">
+      <Value Profile="(Default)">llama3.2-vision</Value>
+    </Setting>
+    <Setting Name="UseOpenAI" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="OpenAIKey" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="OpenAIModel" Type="System.String" Scope="User">
+      <Value Profile="(Default)">gpt-4o-mini</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
