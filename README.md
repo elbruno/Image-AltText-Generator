@@ -2,6 +2,8 @@
 [![Twitter: elbruno](https://img.shields.io/twitter/follow/elbruno.svg?style=social)](https://twitter.com/elbruno)
 ![GitHub: elbruno](https://img.shields.io/github/followers/elbruno?style=social)
 
+[![.NET App Build](https://github.com/elbruno/Image-AltText-Generator-Ollama/actions/workflows/dotnet-desktop.yml/badge.svg)](https://github.com/elbruno/Image-AltText-Generator-Ollama/actions/workflows/dotnet-desktop.yml)
+
 ## Description
 
 **AltTextImageGeneratorWinForm** is a Windows application designed to generate alt text descriptions for images. This tool is particularly useful for creating image descriptions for applications like X/Twitter, BlueSky, LinkedIm, PowerPoint, and other platforms where alt text is needed to improve accessibility. 
