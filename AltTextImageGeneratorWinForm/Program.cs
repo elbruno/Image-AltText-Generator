@@ -1,3 +1,5 @@
+using AltTextImageGenerator;
+
 namespace AltTextImageGeneratorWinForm
 {
     internal static class Program
@@ -9,9 +11,11 @@ namespace AltTextImageGeneratorWinForm
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            var imageAltTextGenerator = new ImageAltTextGenerator(RetrieveCurrentAppSettings());
+
             if (args.Length == 0)
             {
-                await ImageAltTextGenerator.ValidateIfClipboardIsImageAsync();
+                await imageAltTextGenerator.ValidateIfClipboardIsImageAsync();
                 return;
             }
             if (args[0] == "-h")
@@ -38,7 +42,7 @@ namespace AltTextImageGeneratorWinForm
             try
             {
                 string fileLocation = args[0];
-                await ImageAltTextGenerator.ProcessImageFile(fileLocation);
+                await imageAltTextGenerator.ProcessImageFile(fileLocation);
             }
             catch (Exception exc)
             {
@@ -63,5 +67,21 @@ Options:
 -s Open the settings for the Application";
             MessageBox.Show(messageInfo, "Help Information");
         }
+
+        static AltTextGenSettings RetrieveCurrentAppSettings()
+        {
+            Properties.Settings.Default.Reload();
+            AltTextGenSettings settings = new()
+            {
+                UseOllama = Properties.Settings.Default.UseOllama,
+                OllamaUrl = Properties.Settings.Default.OllamaUrl,
+                OllamaModelId = Properties.Settings.Default.OllamaModelId,
+                UseOpenAI = Properties.Settings.Default.UseOpenAI,
+                OpenAIKey = Properties.Settings.Default.OpenAIKey,
+                OpenAIModelId = Properties.Settings.Default.OpenAIModel
+            };
+            return settings;
+        }
+
     }
 }

@@ -9,16 +9,11 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Clowd.Clipboard" Version="1.1.4" />
-		<PackageReference Include="Clowd.Clipboard.Gdi" Version="1.1.4" />
-		<PackageReference Include="Microsoft.Extensions.AI" Version="9.0.1-preview.1.24570.5" />
-		<PackageReference Include="Microsoft.Extensions.AI.Ollama" Version="9.0.1-preview.1.24570.5" />
-		<PackageReference Include="Microsoft.Extensions.AI.OpenAI" Version="9.0.1-preview.1.24570.5" />
-		<PackageReference Include="TextCopy" Version="6.2.1" />
+	  <Folder Include="images\" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="images\" />
+	  <ProjectReference Include="..\AltTextImageGenerator\AltTextImageGenerator.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
