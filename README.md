@@ -32,7 +32,8 @@ After installing Ollama, download the [Llama3.2-vision model](https://ollama.com
 
 The following scenarios are supported by the application.
 
-***Important:** you need to have ollama running and the Llama3.2-vision model downloaded.*
+- Using Ollama with a local vision model to analyze the image
+- Using OpenAI and gpt-4o or gpt-4o-mini to analyze the image
 
 ### Example Usage with images in the Clipboard
 
@@ -63,6 +64,23 @@ To register the application and add a new right click meu to windows, run the fo
 ```bash
 AltTextImageGenerator -r
 ```
+
+### Settings of the application
+
+To edit the application settings you must run the following command in the terminal:
+
+```bash
+AltTextImageGenerator -s
+```
+
+This will show the settings dialog, where you can configure the following settings:
+
+- Use Ollama
+  -	Ollama Url and Ollama vision model
+- Use OpenAI
+  - OpenAI Key and OpenAI model
+
+[Application Settings](./images/05Settings.png)
 
 ## Detailed Description of the Functionality
 
