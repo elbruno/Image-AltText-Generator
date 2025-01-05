@@ -16,11 +16,9 @@ jobs:
 
     env:
       Solution_Name: AltTextImageGenerator.sln
-      App_Packages_Directory: AppPackages
-      SigningCertificate: GitHubActionsDemo.pfx
-      Solution_Path: AltTextImageGenerator.sln
-      Wap_Project_Directory: AltTextImageGeneratorWinForm
       Test_Project_Path: AltTextImageGeneratorWinForm_Tests\AltTextImageGeneratorWinForm_Tests.csproj
+      Wap_Project_Directory: AltTextImageGeneratorWinForm
+      Wap_Project_Path: AltTextImageGeneratorWinForm
 
     steps:
     - name: Checkout
@@ -28,20 +26,19 @@ jobs:
       with:
         fetch-depth: 0
 
-    # Use Nerdbank.GitVersioning to set version variables: https://github.com/AArnott/nbgv
-    - name: Use Nerdbank.GitVersioning to set version variables
-      uses: dotnet/nbgv@master
-      id: nbgv
-
-    # Install the .NET workload
-    - name: Install .NET
+    # Install the .NET Core workload
+    - name: Install .NET Core
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 9.0.x
+        dotnet-version: 8.0.x
 
     # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v2
+
+    # Execute all unit tests in the solution
+    - name: Execute unit tests
+      run: dotnet test
 
     # Restore the application to populate the obj folder with RuntimeIdentifiers
     - name: Restore the application
@@ -49,38 +46,29 @@ jobs:
       env:
         Configuration: ${{ matrix.configuration }}
 
-    # Build the solution
-    - name: Build the solution
-      run: dotnet build
-
-    # Test
-    - name: Execute Unit Tests
-      run: dotnet test $env:Test_Project_Path
-
-    # Decode the Base64 encoded Pfx
-    - name: Decode the Pfx
+    # Decode the base 64 encoded pfx and save the Signing_Certificate
+    - name: Decode the pfx
       run: |
         $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.Base64_Encoded_Pfx }}")
-        $currentDirectory = Get-Location
-        $certificatePath = Join-Path -Path $currentDirectory -ChildPath $env:Wap_Project_Directory -AdditionalChildPath $env:SigningCertificate
+        $certificatePath = Join-Path -Path $env:Wap_Project_Directory -ChildPath GitHubActionsWorkflow.pfx
         [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
 
-    # Build the Windows Application Packaging project
-    - name: Build the Windows Application Packaging Project (wapproj)
-      run: msbuild $env:Solution_Path /p:Platform=$env:TargetPlatform /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:BuildMode /p:AppxBundle=$env:AppxBundle /p:PackageCertificateKeyFile=$env:SigningCertificate /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
+    # Create the app package by building and packaging the Windows Application Packaging project
+    - name: Create the app package
+      run: msbuild $env:Wap_Project_Path /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:Appx_Bundle /p:PackageCertificateKeyFile=GitHubActionsWorkflow.pfx /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
       env:
-        AppxBundle: Never
-        BuildMode: SideloadOnly
-        Configuration: Debug
-        TargetPlatform: ${{ matrix.targetplatform }}
+        Appx_Bundle: Always
+        Appx_Bundle_Platforms: x86|x64
+        Appx_Package_Build_Mode: StoreUpload
+        Configuration: ${{ matrix.configuration }}
 
-    # Remove the .pfx
-    - name: Remove the .pfx
-      run: Remove-Item -path $env:Wap_Project_Directory\$env:SigningCertificate
+    # Remove the pfx
+    - name: Remove the pfx
+      run: Remove-Item -path $env:Wap_Project_Directory\GitHubActionsWorkflow.pfx
 
-    # Upload the MSIX package: https://github.com/marketplace/actions/upload-artifact
+    # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v3
       with:
         name: MSIX Package
-        path: ${{ env.Wap_Project_Directory }}\${{ env.App_Packages_Directory }}
+        path: ${{ env.Wap_Project_Directory }}\AppPackages
