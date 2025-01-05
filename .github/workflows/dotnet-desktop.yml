@@ -21,7 +21,6 @@ jobs:
       Solution_Path: AltTextImageGenerator.sln
       Wap_Project_Directory: AltTextImageGeneratorWinForm
       Test_Project_Path: AltTextImageGeneratorWinForm_Tests\AltTextImageGeneratorWinForm_Tests.csproj
-      Actions_Allow_Unsecure_Commands: true # Allows AddPAth and SetEnv commands      
 
     steps:
     - name: Checkout
