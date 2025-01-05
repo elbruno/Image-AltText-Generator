@@ -80,7 +80,7 @@ This will show the settings dialog, where you can configure the following settin
 - Use OpenAI
   - OpenAI Key and OpenAI model
 
-[Application Settings](./images/05Settings.png)
+![Application Settings](./images/05Settings.png)
 
 ## Detailed Description of the Functionality
 
