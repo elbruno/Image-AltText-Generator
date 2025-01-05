@@ -1,7 +1,7 @@
 ﻿using AltTextImageGenerator;
 using Clowd.Clipboard;
 
-namespace AltTextImageGeneratorWinForm_Tests
+namespace AltTextImageGenerator_Tests
 {
     [TestClass]
     public sealed class ImageAltTextGenerator_Tests

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AltTextImageGeneratorWinForm_Tests {
+namespace AltTextImageGenerator_Tests {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace AltTextImageGeneratorWinForm_Tests {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AltTextImageGeneratorWinForm_Tests.ResourcesTest", typeof(ResourcesTest).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AltTextImageGenerator_Tests.ResourcesTest", typeof(ResourcesTest).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

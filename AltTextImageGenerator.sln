@@ -5,7 +5,7 @@ VisualStudioVersion = 17.13.35617.110
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AltTextImageGeneratorWinForm", "AltTextImageGeneratorWinForm\AltTextImageGeneratorWinForm.csproj", "{5A351A54-9EA1-417B-B7BC-929DFC52376B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AltTextImageGeneratorWinForm_Tests", "AltTextImageGeneratorWinForm_Tests\AltTextImageGeneratorWinForm_Tests.csproj", "{A7DB7BA5-373A-4974-A753-EDE84C0A678B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AltTextImageGenerator_Tests", "AltTextImageGenerator_Tests\AltTextImageGenerator_Tests.csproj", "{A7DB7BA5-373A-4974-A753-EDE84C0A678B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AltTextImageGenerator", "AltTextImageGenerator\AltTextImageGenerator.csproj", "{CDB5CFF7-8A4A-476A-8EFE-64D88FBC0DC3}"
 EndProject
