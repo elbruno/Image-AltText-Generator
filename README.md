@@ -4,18 +4,24 @@
 
 ## Description
 
-**AltTextImageGeneratorWinForm** is a Windows Forms application designed to generate alt text descriptions for images. This tool is particularly useful for creating image descriptions for applications like X/Twitter, BlueSky, PowerPoint, and other platforms where alt text is needed to improve accessibility. 
+**AltTextImageGeneratorWinForm** is a Windows application designed to generate alt text descriptions for images. This tool is particularly useful for creating image descriptions for applications like X/Twitter, BlueSky, LinkedIm, PowerPoint, and other platforms where alt text is needed to improve accessibility. 
 
 The application processes an image file, generates a descriptive alt text, and saves it to a text file. Additionally, it copies the generated alt text to the clipboard for easy pasting.
+
+The application uses a LLM to generate the Alt-Text. The model can be running locally using ollama or using a paid service like OpenAI APIs. 
 
 ![Application running](./images/01DemoApp.png)
 
 ## Requirements
 
 - [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0) or later
-- [Ollama](https://ollama.com/) installed locally
-- [Llama3.2-vision model](https://ollama.com/library/llama3.2-vision) downloaded and configured in Ollama
-
+- Option 1: Using Ollama with the a vision model, like Llama3.2-vision
+  - [Ollama](https://ollama.com/) installed locally
+  - [Llama3.2-vision model](https://ollama.com/library/llama3.2-vision) downloaded and configured in Ollama
+- Option 2: Using OpenAI and gpt-4o or gpt-4o-mini to analyze the image
+  - [OpenAI](https://platform.openai.com/) account with API access and credit
+  - ***Important:** this option requires to pay for the OpenAI API usage*
+  
 ### Installing .NET 9.0 SDK
 
 You can download and install the .NET 9.0 SDK from the official [.NET website](https://dotnet.microsoft.com/download/dotnet/9.0).
