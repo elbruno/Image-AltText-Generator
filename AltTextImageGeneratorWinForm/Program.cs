@@ -1,4 +1,5 @@
 using AltTextImageGenerator;
+using System.Linq.Expressions;
 
 namespace AltTextImageGeneratorWinForm
 {
@@ -15,7 +16,15 @@ namespace AltTextImageGeneratorWinForm
 
             if (args.Length == 0)
             {
-                await imageAltTextGenerator.ValidateIfClipboardIsImageAsync();
+                try
+                {
+                    var message = await imageAltTextGenerator.ValidateIfClipboardIsImageAsync();
+                    MessageBox.Show(message);
+                }
+                catch (Exception exc)
+                {
+                    MessageBox.Show($"Error: {exc.Message}");
+                }
                 return;
             }
             if (args[0] == "-h")
