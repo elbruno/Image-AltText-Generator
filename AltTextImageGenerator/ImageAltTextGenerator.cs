@@ -14,11 +14,8 @@ public class ImageAltTextGenerator
 
     public async Task<string> ValidateIfClipboardIsImageAsync()
     {
-        string altText = "";
         string fileFromClipboard = await GetImageFromClipboardAndSaveItToDisk(); 
-        altText = await ProcessImageFile(fileFromClipboard);
-
-        return altText;
+        return await ProcessImageFile(fileFromClipboard);
     }
 
     public async Task<string> GetImageFromClipboardAndSaveItToDisk()

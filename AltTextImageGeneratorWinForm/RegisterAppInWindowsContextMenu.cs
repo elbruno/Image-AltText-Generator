@@ -5,7 +5,7 @@ namespace AltTextImageGeneratorWinForm;
 
 internal class RegisterAppInWindowsContextMenu
 {
-    internal static bool RegisterAppInWindowsMenus()
+    internal static bool AddContextMenu()
     {
         var result = false;
         try
