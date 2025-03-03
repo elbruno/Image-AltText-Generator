@@ -20,5 +20,11 @@
     <Setting Name="OpenAIModel" Type="System.String" Scope="User">
       <Value Profile="(Default)">gpt-4o-mini</Value>
     </Setting>
+    <Setting Name="UseLocalOnnxModel" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="LocalOnnxModelPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

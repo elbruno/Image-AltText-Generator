@@ -42,8 +42,15 @@
             chkUseOpenAI = new CheckBox();
             btnSave = new Button();
             btnClose = new Button();
+            panel2 = new Panel();
+            btnSelectOnnxFolder = new Button();
+            txtPhi4ModelPath = new TextBox();
+            lblPhi4ModelPath = new Label();
+            chkLocalOnnxModel = new CheckBox();
+            folderBrowserDialog1 = new FolderBrowserDialog();
             panelOllama.SuspendLayout();
             panel1.SuspendLayout();
+            panel2.SuspendLayout();
             SuspendLayout();
             // 
             // chkUseOllama
@@ -56,7 +63,6 @@
             chkUseOllama.TabIndex = 0;
             chkUseOllama.Text = "Use Ollama";
             chkUseOllama.UseVisualStyleBackColor = true;
-            chkUseOllama.CheckedChanged += chkUseOllama_CheckedChanged;
             // 
             // lblOllamaUrl
             // 
@@ -155,11 +161,10 @@
             chkUseOpenAI.TabIndex = 4;
             chkUseOpenAI.Text = "Use OpenAI APIs";
             chkUseOpenAI.UseVisualStyleBackColor = true;
-            chkUseOpenAI.CheckedChanged += chkUseOpenAI_CheckedChanged;
             // 
             // btnSave
             // 
-            btnSave.Location = new Point(578, 312);
+            btnSave.Location = new Point(575, 462);
             btnSave.Name = "btnSave";
             btnSave.Size = new Size(94, 29);
             btnSave.TabIndex = 6;
@@ -169,7 +174,7 @@
             // 
             // btnClose
             // 
-            btnClose.Location = new Point(688, 312);
+            btnClose.Location = new Point(685, 462);
             btnClose.Name = "btnClose";
             btnClose.Size = new Size(94, 29);
             btnClose.TabIndex = 7;
@@ -177,11 +182,60 @@
             btnClose.UseVisualStyleBackColor = true;
             btnClose.Click += btnClose_Click;
             // 
+            // panel2
+            // 
+            panel2.Controls.Add(btnSelectOnnxFolder);
+            panel2.Controls.Add(txtPhi4ModelPath);
+            panel2.Controls.Add(lblPhi4ModelPath);
+            panel2.Location = new Point(12, 342);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(770, 104);
+            panel2.TabIndex = 9;
+            // 
+            // btnSelectOnnxFolder
+            // 
+            btnSelectOnnxFolder.Location = new Point(658, 49);
+            btnSelectOnnxFolder.Name = "btnSelectOnnxFolder";
+            btnSelectOnnxFolder.Size = new Size(94, 29);
+            btnSelectOnnxFolder.TabIndex = 7;
+            btnSelectOnnxFolder.Text = "...";
+            btnSelectOnnxFolder.UseVisualStyleBackColor = true;
+            btnSelectOnnxFolder.Click += btnSelectOnnxFolder_Click;
+            // 
+            // txtPhi4ModelPath
+            // 
+            txtPhi4ModelPath.Location = new Point(14, 49);
+            txtPhi4ModelPath.Name = "txtPhi4ModelPath";
+            txtPhi4ModelPath.Size = new Size(638, 27);
+            txtPhi4ModelPath.TabIndex = 2;
+            // 
+            // lblPhi4ModelPath
+            // 
+            lblPhi4ModelPath.AutoSize = true;
+            lblPhi4ModelPath.Location = new Point(13, 17);
+            lblPhi4ModelPath.Name = "lblPhi4ModelPath";
+            lblPhi4ModelPath.Size = new Size(249, 20);
+            lblPhi4ModelPath.TabIndex = 1;
+            lblPhi4ModelPath.Text = "Phi-4 Multimodal model folder path";
+            // 
+            // chkLocalOnnxModel
+            // 
+            chkLocalOnnxModel.AutoSize = true;
+            chkLocalOnnxModel.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            chkLocalOnnxModel.Location = new Point(26, 312);
+            chkLocalOnnxModel.Name = "chkLocalOnnxModel";
+            chkLocalOnnxModel.Size = new Size(139, 24);
+            chkLocalOnnxModel.TabIndex = 8;
+            chkLocalOnnxModel.Text = "Use Phi-4 Onnx";
+            chkLocalOnnxModel.UseVisualStyleBackColor = true;
+            // 
             // formSettings
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 355);
+            ClientSize = new Size(800, 503);
+            Controls.Add(panel2);
+            Controls.Add(chkLocalOnnxModel);
             Controls.Add(btnClose);
             Controls.Add(btnSave);
             Controls.Add(panel1);
@@ -197,6 +251,8 @@
             panelOllama.PerformLayout();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
+            panel2.ResumeLayout(false);
+            panel2.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -217,5 +273,11 @@
         private CheckBox chkUseOpenAI;
         private Button btnSave;
         private Button btnClose;
+        private Panel panel2;
+        private TextBox txtPhi4ModelPath;
+        private Label lblPhi4ModelPath;
+        private CheckBox chkLocalOnnxModel;
+        private Button btnSelectOnnxFolder;
+        private FolderBrowserDialog folderBrowserDialog1;
     }
 }

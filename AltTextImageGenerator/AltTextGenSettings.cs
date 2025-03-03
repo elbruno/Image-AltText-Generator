@@ -8,4 +8,6 @@ public class AltTextGenSettings
     public bool UseOpenAI {get; set;}
     public string OpenAIKey {get; set;}
     public string OpenAIModelId { get; set; }
+    public bool UseLocalOnnxModel { get; set; }
+    public string LocalOnnxModelPath { get; set; }
 }

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "AltTextImageGeneratorWinForm": {
+      "commandName": "Project",
+      "commandLineArgs": "-s"
+    }
+  }
+}
