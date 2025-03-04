@@ -109,7 +109,7 @@ Generated alt text:
         }
         if (_settings.UseLocalOnnxModel)
         {            
-            var chatOnnxLocal = new TempOnnx.OnnxChatClient(_settings.LocalOnnxModelPath);
+            var chatOnnxLocal = new OnnxPhi4ChatClient(_settings.LocalOnnxModelPath);
             var imageAnalysis = await chatOnnxLocal.GetResponseAsync(messages);
             stringBuilder.AppendLine("Phi-4: ");
             stringBuilder.AppendLine(imageAnalysis.Message.Text);

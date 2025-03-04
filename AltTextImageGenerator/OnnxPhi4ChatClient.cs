@@ -1,25 +1,26 @@
 ﻿using Microsoft.Extensions.AI;
 using Microsoft.ML.OnnxRuntimeGenAI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace AltTextImageGenerator.TempOnnx;
+namespace AltTextImageGenerator;
 
-internal class OnnxChatClient : IChatClient
+internal class OnnxPhi4ChatClient : IChatClient, IDisposable
 {
-    private string localOnnxModelPath;
+    private readonly string localOnnxModelPath;
+    private readonly Model model;
+    private readonly Tokenizer tokenizer;
 
-    public OnnxChatClient(string localOnnxModelPath)
+    public OnnxPhi4ChatClient(string localOnnxModelPath)
     {
         this.localOnnxModelPath = localOnnxModelPath;
+        model = new Model(localOnnxModelPath);
+        tokenizer = new Tokenizer(model);
     }
 
     public void Dispose()
     {
-        throw new NotImplementedException();
+        tokenizer.Dispose();
+        model.Dispose();
     }
 
     public async Task<ChatResponse> GetResponseAsync(IList<ChatMessage> chatMessages, ChatOptions? options = null, CancellationToken cancellationToken = default)
@@ -50,34 +51,22 @@ internal class OnnxChatClient : IChatClient
 
         var fullPrompt = $"<|system|>{systemPrompt}<|end|><|user|><|image_1|>{userPrompt}<|end|><|assistant|>";
 
-        // initialize model
-        var model = new Model(localOnnxModelPath);
-        var tokenizer = new Tokenizer(model);
-
         using MultiModalProcessor processor = new MultiModalProcessor(model);
         using var tokenizerStream = processor.CreateStream();
 
-        // create the input tensor with the prompt and image
         var inputTensors = processor.ProcessImages(fullPrompt, img);
         using GeneratorParams generatorParams = new GeneratorParams(model);
         generatorParams.SetSearchOption("max_length", 3072);
         generatorParams.SetInputs(inputTensors);
 
-        // generate response
         StringBuilder sb = new StringBuilder();
         using var generator = new Generator(model, generatorParams);
         while (!generator.IsDone())
         {
-            //generator.ComputeLogits();
             generator.GenerateNextToken();
             var seq = generator.GetSequence(0)[^1];
             sb.Append(tokenizerStream.Decode(seq));
         }
-
-        tokenizerStream.Dispose();
-        processor.Dispose();
-        tokenizer.Dispose();
-        model.Dispose();
 
         var response = new ChatResponse(
             new ChatMessage(ChatRole.Assistant, sb.ToString()));

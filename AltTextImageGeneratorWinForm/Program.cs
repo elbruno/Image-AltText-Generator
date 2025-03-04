@@ -38,6 +38,7 @@ internal static class Program
                         break;
                     default:
                         var message = await imageAltTextGenerator.ProcessImageFile(args[0]);
+                        Console.WriteLine(message);
                         MessageBox.Show(message);
                         break;
                 }
