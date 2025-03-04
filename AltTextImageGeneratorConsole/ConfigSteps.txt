@@ -7,7 +7,7 @@ cd AltTextImageGeneratorConsole
 dotnet user-secrets init
 
 # Add each required setting
-dotnet user-secrets set "UseOllama" "True"
+dotnet user-secrets set "UseOllama" "False"
 dotnet user-secrets set "OllamaUrl" "http://localhost:11434/"
 dotnet user-secrets set "OllamaModelId" "llama3.2-vision"
 dotnet user-secrets set "UseOpenAI" "False"

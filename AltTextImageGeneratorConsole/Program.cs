@@ -1,5 +1,6 @@
 ﻿using AltTextImageGenerator;
-using Microsoft.Extensions.Configuration;
+using AltTextImageGeneratorConsole.Settings;
+using System.Text.Json;
 
 var imageAltTextGenerator = new ImageAltTextGenerator(RetrieveCurrentAppSettings());
 
@@ -14,11 +15,20 @@ try
     {
         switch (args[0])
         {
-            case "-h":
+            case "-help":
                 ShowHelp();
                 break;
-            case "-s":
-                ShowCurrentSettings();
+            case "-show":
+                ShowCurrentSettingsAsync();
+                break;
+            case "-set":
+                if (args.Length < 3)
+                {
+                    Console.WriteLine("Please provide a key and a value to set.");
+                    break;
+                }
+                SetSettingAsync(args[1], args[2]);
+                Console.WriteLine($"Setting {args[1]} to {args[2]}");
                 break;
             default:
                 var message = await imageAltTextGenerator.ProcessImageFile(args[0]);
@@ -43,39 +53,64 @@ AltTextImageGenerator <fileLocation>
   Where <fileLocation> the image to be processed and the Alt-Text generated
 
 Options:  
--h Show help information
--s Show current settings";
+-help Show help information
+-show Show current settings
+-set <key> <value> Save a setting value";
     Console.WriteLine(messageInfo);
+}
+
+static void SetSettingAsync(string key, string value)
+{
+    var settingsRepo = new FileSystemSettingsRepo();
+    var userSettings = settingsRepo.GetSettings().Result;
+
+    var propertyInfo = typeof(AltTextGenSettings).GetProperty(key);
+    if (propertyInfo == null)
+    {
+        Console.WriteLine($"Setting {key} not found.");
+        return;
+    }
+    if (propertyInfo.PropertyType == typeof(bool))
+    {
+        propertyInfo.SetValue(userSettings, bool.Parse(value));
+    }
+    else if (propertyInfo.PropertyType == typeof(string))
+    {
+        propertyInfo.SetValue(userSettings, value);
+    }
+    else
+    {
+        Console.WriteLine($"Setting {key} is not a string or boolean.");
+        return;
+    }
+    settingsRepo.SaveSettings(userSettings);
 }
 
 static AltTextGenSettings RetrieveCurrentAppSettings()
 {
-    var configuration = new ConfigurationBuilder()
-        .AddUserSecrets<Program>()
-        .Build();
+    var settingsRepo = new FileSystemSettingsRepo();
+    var userSettings = settingsRepo.GetSettings().Result;
 
     return new AltTextGenSettings
     {
-        UseOllama = bool.Parse(configuration["UseOllama"]),
-        OllamaUrl = configuration["OllamaUrl"],
-        OllamaModelId = configuration["OllamaModelId"],
-        UseOpenAI = bool.Parse(configuration["UseOpenAI"]),
-        OpenAIKey = configuration["OpenAIKey"],
-        OpenAIModelId = configuration["OpenAIModelId"],
-        UseLocalOnnxModel = bool.Parse(configuration["UseLocalOnnxModel"]),
-        LocalOnnxModelPath = configuration["LocalOnnxModelPath"]
+        UseOllama = userSettings.UseOllama,
+        OllamaUrl = userSettings.OllamaUrl,
+        OllamaModelId = userSettings.OllamaModelId,
+        UseOpenAI = userSettings.UseOpenAI,
+        OpenAIKey = userSettings.OpenAIKey,
+        OpenAIModelId = userSettings.OpenAIModelId,
+        UseLocalOnnxModel = userSettings.UseLocalOnnxModel,
+        LocalOnnxModelPath = userSettings.LocalOnnxModelPath
     };
 }
 
-static void ShowCurrentSettings()
+static void ShowCurrentSettingsAsync()
 {
-    var settings = RetrieveCurrentAppSettings();
-    Console.WriteLine($"UseOllama: {settings.UseOllama}");
-    Console.WriteLine($"OllamaUrl: {settings.OllamaUrl}");
-    Console.WriteLine($"OllamaModelId: {settings.OllamaModelId}");
-    Console.WriteLine($"UseOpenAI: {settings.UseOpenAI}");
-    Console.WriteLine($"OpenAIKey: {settings.OpenAIKey}");
-    Console.WriteLine($"OpenAIModelId: {settings.OpenAIModelId}");
-    Console.WriteLine($"UseLocalOnnxModel: {settings.UseLocalOnnxModel}");
-    Console.WriteLine($"LocalOnnxModelPath: {settings.LocalOnnxModelPath}");
+    var settingsRepo = new FileSystemSettingsRepo();
+    var userSettings = settingsRepo.GetSettings().Result;
+
+    var settingsJson = JsonSerializer.Serialize(userSettings, new JsonSerializerOptions { WriteIndented = true });
+    Console.WriteLine(settingsJson);
+    Console.WriteLine();
+    Console.WriteLine("Settings are stored in the userSettings.json file in the LocalAppData folder.");
 }

@@ -79,11 +79,25 @@ Use Phi-4: {_settings.UseLocalOnnxModel}";
 
         List<ChatMessage> messages = new List<ChatMessage>
             {
-                new ChatMessage(ChatRole.User, @$"Generate a complete alt text description for the attached image. Return only the alt text description, no other content.")
+                new ChatMessage(ChatRole.User, @$"Generate a complete alt text description for the attached image. Be very descriptive with the image description. Include all the elements and content found in the image. Return only the alt text description, no other content.")
             };
 
         StringBuilder stringBuilder = new StringBuilder();
+        if (_settings.UseLocalOnnxModel)
+        {
+            Console.WriteLine($"Using Phi-4 local: {_settings.LocalOnnxModelPath}");
+            var chatOnnxLocal = new OnnxPhi4ChatClient(_settings.LocalOnnxModelPath);
 
+            // when use local onnx model, we only pass the image location
+            messages.Add(new ChatMessage(ChatRole.User, [new DataContent(imageLocation, mediaType)]));
+
+            var imageAnalysis = await chatOnnxLocal.GetResponseAsync(messages);
+            stringBuilder.AppendLine("Phi-4: ");
+            stringBuilder.AppendLine(imageAnalysis.Message.Text);
+            stringBuilder.AppendLine();
+            Console.WriteLine($">> Phi-4 done");
+            Console.WriteLine();
+        }
         if (_settings.UseOllama)
         {
             Console.WriteLine($"Using Ollama: {_settings.OllamaModelId} - {_settings.OllamaUrl}");
@@ -117,21 +131,7 @@ Use Phi-4: {_settings.UseLocalOnnxModel}";
             Console.WriteLine($">> OpenAI done");
             Console.WriteLine();
         }
-        if (_settings.UseLocalOnnxModel)
-        {
-            Console.WriteLine($"Using Phi-4 local: {_settings.LocalOnnxModelPath}");
-            var chatOnnxLocal = new OnnxPhi4ChatClient(_settings.LocalOnnxModelPath);
 
-            // when use local onnx model, we only pass the image location
-            messages.Add(new ChatMessage(ChatRole.User, [new DataContent(imageLocation, mediaType)]));
-
-            var imageAnalysis = await chatOnnxLocal.GetResponseAsync(messages);
-            stringBuilder.AppendLine("Phi-4: ");
-            stringBuilder.AppendLine(imageAnalysis.Message.Text);
-            stringBuilder.AppendLine();
-            Console.WriteLine($">> Phi-4 done");
-            Console.WriteLine();
-        }
 
         Console.WriteLine();
         return stringBuilder.ToString();
