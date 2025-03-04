@@ -5,11 +5,6 @@ namespace AltTextImageGeneratorWinForm
         public formSettings()
         {
             InitializeComponent();
-
-            // Add event handlers for the checkboxes
-            chkUseOllama.CheckedChanged += chkUseOllama_CheckedChanged;
-            chkUseOpenAI.CheckedChanged += chkUseOpenAI_CheckedChanged;
-            chkLocalOnnxModel.CheckedChanged += chkLocalOnnxModel_CheckedChanged;
         }
 
         private void formSettings_Load(object sender, EventArgs e)
@@ -54,33 +49,5 @@ namespace AltTextImageGeneratorWinForm
             //    txtPhi4ModelPath.Text = folderBrowserDialog1.SelectedPath;
             //}
         }
-
-        private void chkUseOllama_CheckedChanged(object sender, EventArgs e)
-        {
-            if (chkUseOllama.Checked)
-            {
-                chkUseOpenAI.Checked = false;
-                chkLocalOnnxModel.Checked = false;
-            }
-        }
-
-        private void chkUseOpenAI_CheckedChanged(object sender, EventArgs e)
-        {
-            if (chkUseOpenAI.Checked)
-            {
-                chkUseOllama.Checked = false;
-                chkLocalOnnxModel.Checked = false;
-            }
-        }
-
-        private void chkLocalOnnxModel_CheckedChanged(object sender, EventArgs e)
-        {
-            if (chkLocalOnnxModel.Checked)
-            {
-                chkUseOllama.Checked = false;
-                chkUseOpenAI.Checked = false;
-            }
-        }
-
     }
 }

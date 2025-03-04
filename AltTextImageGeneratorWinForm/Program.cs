@@ -76,7 +76,9 @@ Options:
             OllamaModelId = Properties.Settings.Default.OllamaModelId,
             UseOpenAI = Properties.Settings.Default.UseOpenAI,
             OpenAIKey = Properties.Settings.Default.OpenAIKey,
-            OpenAIModelId = Properties.Settings.Default.OpenAIModel
+            OpenAIModelId = Properties.Settings.Default.OpenAIModel,
+            UseLocalOnnxModel = Properties.Settings.Default.UseLocalOnnxModel,
+            LocalOnnxModelPath = Properties.Settings.Default.LocalOnnxModelPath
         };
     }
 }

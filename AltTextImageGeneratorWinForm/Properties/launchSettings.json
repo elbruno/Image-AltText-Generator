@@ -2,7 +2,7 @@
   "profiles": {
     "AltTextImageGeneratorWinForm": {
       "commandName": "Project",
-      "commandLineArgs": "-s"
+      "commandLineArgs": "\"E:\\od\\OneDrive - Microsoft\\Desktop\\images SLMs\\foggyday.png\""
     }
   }
 }

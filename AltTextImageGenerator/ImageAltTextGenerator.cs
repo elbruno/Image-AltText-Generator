@@ -1,7 +1,9 @@
 ﻿using Clowd.Clipboard;
 using Microsoft.Extensions.AI;
+using Microsoft.ML.OnnxRuntimeGenAI;
 using OpenAI;
 using System.Reflection;
+using System.Text;
 using TextCopy;
 
 namespace AltTextImageGenerator;
@@ -49,9 +51,15 @@ public class ImageAltTextGenerator
         string altTextFileLocation = Path.ChangeExtension(fileLocation, ".txt");
         File.WriteAllText(altTextFileLocation, altText);
 
-        var aiServiceUsed = _settings.UseOllama ? "Ollama" : "OpenAI";
+        // create a new string that indicates which services are used
+        // and the location of the source file and the alt text file
 
-        altText = $@"Using AI service: {aiServiceUsed}
+        var aiServiceUsed = $@"Use OpenAI: {_settings.UseOpenAI}
+Use Ollama: {_settings.UseOllama} - {_settings.OllamaModelId}
+Use Phi-4: {_settings.UseLocalOnnxModel}";
+
+
+        altText = $@"AI services:{Environment.NewLine}{aiServiceUsed}
 Source file: {fileLocation}
 Alt Text file: {altTextFileLocation}
 
@@ -66,33 +74,53 @@ Generated alt text:
 
     private async Task<string> GenerateAltTextForImageAsync(string imageLocation)
     {
-        IChatClient chat;
+        // get the media type from the image location
+        var mediaType = GetMediaType(imageLocation);
+
+        byte[] imageBytes = File.ReadAllBytes(imageLocation);
+
+
+        List<ChatMessage> messages = new List<ChatMessage>
+            {
+                new ChatMessage(ChatRole.User, @$"Generate the alt text description for the attached image. Return only the alt text description, no other content."),
+                new ChatMessage(ChatRole.User, [new DataContent(imageLocation, mediaType)]),
+                new ChatMessage(ChatRole.User, [new DataContent(imageBytes, mediaType)])
+            };
+
+        StringBuilder stringBuilder = new StringBuilder();
+
         if (_settings.UseOllama)
         {
-            chat = new OllamaChatClient(
+            var chatOllama = new OllamaChatClient(
                 new Uri(uriString: _settings.OllamaUrl),
                 _settings.OllamaModelId);
+            var imageAnalysis = await chatOllama.GetResponseAsync(messages);
+            stringBuilder.AppendLine("Ollama: ");
+            stringBuilder.AppendLine(imageAnalysis.Message.Text);
+            stringBuilder.AppendLine();
         }
-        else if (_settings.UseOpenAI)
+        if (_settings.UseOpenAI)
         {
-            chat = new OpenAIClient(apiKey: _settings.OpenAIKey).AsChatClient(_settings.OpenAIModelId);
+            var chatOpenAI = new OpenAI.OpenAIClient(apiKey: _settings.OpenAIKey).AsChatClient(_settings.OpenAIModelId);
+            var imageAnalysis = await chatOpenAI.GetResponseAsync(messages);
+            stringBuilder.AppendLine("OpenAI: ");
+            stringBuilder.AppendLine(imageAnalysis.Message.Text);
+            stringBuilder.AppendLine();
+        }
+        if (_settings.UseLocalOnnxModel)
+        {            
+            var chatOnnxLocal = new TempOnnx.OnnxChatClient(_settings.LocalOnnxModelPath);
+            var imageAnalysis = await chatOnnxLocal.GetResponseAsync(messages);
+            stringBuilder.AppendLine("Phi-4: ");
+            stringBuilder.AppendLine(imageAnalysis.Message.Text);
+            stringBuilder.AppendLine();
         }
         else
         {
             throw new NotSupportedException("No AI service is configured");
         }
 
-        // get the media type from the image location
-        var mediaType = GetMediaType(imageLocation);
-
-        List<ChatMessage> messages = new List<ChatMessage>
-            {
-                new ChatMessage(ChatRole.User, @$"Generate the alt text description for the attached image. Return only the alt text description, no other content."),
-                new ChatMessage(ChatRole.User, [new ImageContent(File.ReadAllBytes(imageLocation), mediaType)])
-            };
-        // send the messages to the assistant            
-        var imageAnalysis = await chat.CompleteAsync(messages);
-        return imageAnalysis.Message.Text;
+        return stringBuilder.ToString();
     }
 
     public string GetMediaType(string imageLocation)
