@@ -2,7 +2,7 @@
   "profiles": {
     "AltTextImageGeneratorConsole": {
       "commandName": "Project",
-      "commandLineArgs": "-show -set UseOllama False"
+      "commandLineArgs": ""
     }
   }
 }

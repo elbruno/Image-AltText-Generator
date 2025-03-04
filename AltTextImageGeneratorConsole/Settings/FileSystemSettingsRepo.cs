@@ -39,6 +39,7 @@ sealed class FileSystemSettingsRepo : ISettingsRepo
 
         using var settingsFileStream = new FileStream(_settingsFilePath, FileMode.OpenOrCreate);
         await JsonSerializer.SerializeAsync(settingsFileStream, userSettings);
+        Console.WriteLine($"Settings saved to {_settingsFilePath}");
     }
 
     private static string GetSettingsFolderPath()
