@@ -17,6 +17,7 @@ internal static class Program
             if (args.Length == 0)
             {
                 var message = await imageAltTextGenerator.ValidateIfClipboardIsImageAsync();
+                Console.WriteLine(message);
                 MessageBox.Show(message);
             }
             else
