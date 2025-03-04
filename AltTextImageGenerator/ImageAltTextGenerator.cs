@@ -25,6 +25,9 @@ public class ImageAltTextGenerator
         var clipboardImg = await ClipboardGdi.GetImageAsync();
         if (clipboardImg is null) return string.Empty;
 
+        Console.WriteLine($"Found an image in clipboard");
+        Console.WriteLine($"Clipboard image: {clipboardImg.Width}x{clipboardImg.Height}");
+
         string tempFile = $"{Guid.NewGuid()}.png";
         string currentAppLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         string imagesFolder = Path.Combine(currentAppLocation, "images");
@@ -33,6 +36,9 @@ public class ImageAltTextGenerator
 
         string tempFileFullPath = Path.Combine(imagesFolder, tempFile);
         clipboardImg.Save(tempFileFullPath);
+
+        Console.WriteLine($"Saved image to: {tempFileFullPath}");
+        Console.WriteLine();
 
         return tempFileFullPath;
     }
@@ -73,9 +79,7 @@ Use Phi-4: {_settings.UseLocalOnnxModel}";
 
         List<ChatMessage> messages = new List<ChatMessage>
             {
-                new ChatMessage(ChatRole.User, @$"Generate the alt text description for the attached image. Return only the alt text description, no other content."),
-                new ChatMessage(ChatRole.User, [new DataContent(imageLocation, mediaType)]),
-                new ChatMessage(ChatRole.User, [new DataContent(imageBytes, mediaType)])
+                new ChatMessage(ChatRole.User, @$"Generate a complete alt text description for the attached image. Return only the alt text description, no other content.")
             };
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -87,31 +91,46 @@ Use Phi-4: {_settings.UseLocalOnnxModel}";
             var chatOllama = new OllamaChatClient(
                 new Uri(uriString: _settings.OllamaUrl),
                 _settings.OllamaModelId);
+
+            // in ollama the image should be added as byte array
+            messages.Add(new ChatMessage(ChatRole.User, [new DataContent(imageBytes, mediaType)]));
+
             var imageAnalysis = await chatOllama.GetResponseAsync(messages);
             stringBuilder.AppendLine("Ollama: ");
             stringBuilder.AppendLine(imageAnalysis.Message.Text);
             stringBuilder.AppendLine();
             Console.WriteLine($">> Ollama done");
+            Console.WriteLine();
         }
         if (_settings.UseOpenAI)
         {
-            Console.WriteLine($"Using OpenAI, ApiKey lenght: {_settings.OpenAIKey.Length}");
+            Console.WriteLine($"Using OpenAI, ApiKey length: {_settings.OpenAIKey.Length}");
             var chatOpenAI = new OpenAI.OpenAIClient(apiKey: _settings.OpenAIKey).AsChatClient(_settings.OpenAIModelId);
+
+            // when using OpenAI the image should be added as byte array
+            messages.Add(new ChatMessage(ChatRole.User, [new DataContent(imageBytes, mediaType)]));
+
             var imageAnalysis = await chatOpenAI.GetResponseAsync(messages);
             stringBuilder.AppendLine("OpenAI: ");
             stringBuilder.AppendLine(imageAnalysis.Message.Text);
             stringBuilder.AppendLine();
             Console.WriteLine($">> OpenAI done");
+            Console.WriteLine();
         }
         if (_settings.UseLocalOnnxModel)
         {
             Console.WriteLine($"Using Phi-4 local: {_settings.LocalOnnxModelPath}");
             var chatOnnxLocal = new OnnxPhi4ChatClient(_settings.LocalOnnxModelPath);
+
+            // when use local onnx model, we only pass the image location
+            messages.Add(new ChatMessage(ChatRole.User, [new DataContent(imageLocation, mediaType)]));
+
             var imageAnalysis = await chatOnnxLocal.GetResponseAsync(messages);
             stringBuilder.AppendLine("Phi-4: ");
             stringBuilder.AppendLine(imageAnalysis.Message.Text);
             stringBuilder.AppendLine();
             Console.WriteLine($">> Phi-4 done");
+            Console.WriteLine();
         }
 
         Console.WriteLine();
