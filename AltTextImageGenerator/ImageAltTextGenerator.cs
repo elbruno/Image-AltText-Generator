@@ -22,22 +22,17 @@ public class ImageAltTextGenerator
 
     public async Task<string> GetImageFromClipboardAndSaveItToDisk()
     {
-        string tempFileFullPath = "";
         var clipboardImg = await ClipboardGdi.GetImageAsync();
+        if (clipboardImg is null) return string.Empty;
 
-        if (clipboardImg is not null)
-        {
-            // generate a random file name with the extension png
-            string tempFile = $"{Guid.NewGuid().ToString()}.png";
+        string tempFile = $"{Guid.NewGuid()}.png";
+        string currentAppLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        string imagesFolder = Path.Combine(currentAppLocation, "images");
 
-            // get the current app location
-            string currentAppLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string imagesFolder = Path.Combine(currentAppLocation, "images");
-            if (!Directory.Exists(imagesFolder))
-                Directory.CreateDirectory(imagesFolder);
-            tempFileFullPath = Path.Combine(imagesFolder, tempFile);
-            clipboardImg.Save(tempFileFullPath);
-        }
+        Directory.CreateDirectory(imagesFolder);
+
+        string tempFileFullPath = Path.Combine(imagesFolder, tempFile);
+        clipboardImg.Save(tempFileFullPath);
 
         return tempFileFullPath;
     }
