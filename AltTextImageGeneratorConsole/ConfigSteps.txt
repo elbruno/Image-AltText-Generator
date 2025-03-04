@@ -1,0 +1,20 @@
+﻿Set the secrets using the following commands:
+
+# Navigate to your project directory (assuming you're already there)
+cd AltTextImageGeneratorConsole
+
+# Initialize user secrets (only needed once per project)
+dotnet user-secrets init
+
+# Add each required setting
+dotnet user-secrets set "UseOllama" "True"
+dotnet user-secrets set "OllamaUrl" "http://localhost:11434/"
+dotnet user-secrets set "OllamaModelId" "llama3.2-vision"
+dotnet user-secrets set "UseOpenAI" "False"
+dotnet user-secrets set "OpenAIKey" "your-openai-key-here"
+dotnet user-secrets set "OpenAIModelId" "gpt-4o-mini"
+dotnet user-secrets set "UseLocalOnnxModel" "False"
+dotnet user-secrets set "LocalOnnxModelPath" "path/to/your/onnx/model"
+
+# Verify your secrets
+dotnet user-secrets list

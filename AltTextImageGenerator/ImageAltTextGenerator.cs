@@ -54,11 +54,7 @@ Use Ollama: {_settings.UseOllama} - {_settings.OllamaModelId}
 Use Phi-4: {_settings.UseLocalOnnxModel}";
 
 
-        altText = $@"AI services:{Environment.NewLine}{aiServiceUsed}
-Source file: {fileLocation}
-Alt Text file: {altTextFileLocation}
-
-Generated alt text: 
+        altText = $@"Generated alt text: 
 {altText}";
 
         // copy the alt text content to the clipboard
@@ -86,6 +82,8 @@ Generated alt text:
 
         if (_settings.UseOllama)
         {
+            Console.WriteLine($"Using Ollama: {_settings.OllamaModelId} - {_settings.OllamaUrl}");
+
             var chatOllama = new OllamaChatClient(
                 new Uri(uriString: _settings.OllamaUrl),
                 _settings.OllamaModelId);
@@ -93,28 +91,30 @@ Generated alt text:
             stringBuilder.AppendLine("Ollama: ");
             stringBuilder.AppendLine(imageAnalysis.Message.Text);
             stringBuilder.AppendLine();
+            Console.WriteLine($">> Ollama done");
         }
         if (_settings.UseOpenAI)
         {
+            Console.WriteLine($"Using OpenAI, ApiKey lenght: {_settings.OpenAIKey.Length}");
             var chatOpenAI = new OpenAI.OpenAIClient(apiKey: _settings.OpenAIKey).AsChatClient(_settings.OpenAIModelId);
             var imageAnalysis = await chatOpenAI.GetResponseAsync(messages);
             stringBuilder.AppendLine("OpenAI: ");
             stringBuilder.AppendLine(imageAnalysis.Message.Text);
             stringBuilder.AppendLine();
+            Console.WriteLine($">> OpenAI done");
         }
         if (_settings.UseLocalOnnxModel)
-        {            
+        {
+            Console.WriteLine($"Using Phi-4 local: {_settings.LocalOnnxModelPath}");
             var chatOnnxLocal = new OnnxPhi4ChatClient(_settings.LocalOnnxModelPath);
             var imageAnalysis = await chatOnnxLocal.GetResponseAsync(messages);
             stringBuilder.AppendLine("Phi-4: ");
             stringBuilder.AppendLine(imageAnalysis.Message.Text);
             stringBuilder.AppendLine();
-        }
-        else
-        {
-            throw new NotSupportedException("No AI service is configured");
+            Console.WriteLine($">> Phi-4 done");
         }
 
+        Console.WriteLine();
         return stringBuilder.ToString();
     }
 

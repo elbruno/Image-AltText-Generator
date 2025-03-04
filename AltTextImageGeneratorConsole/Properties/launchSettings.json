@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "AltTextImageGeneratorConsole": {
+      "commandName": "Project",
+      "commandLineArgs": "\"E:\\od\\OneDrive - Microsoft\\Desktop\\images SLMs\\license start wars.jpg\""
+    }
+  }
+}
