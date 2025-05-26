@@ -39,7 +39,7 @@ internal class OnnxPhi4ChatClient : IChatClient, IDisposable
 
             foreach (var content in message.Contents.OfType<DataContent>())
             {
-                if (content.Uri is not null && content.Data is null)
+                if (content.Uri is not null)
                 {
                     imageLocation = content.Uri.ToString();
                 }
@@ -74,12 +74,22 @@ internal class OnnxPhi4ChatClient : IChatClient, IDisposable
         return await Task.FromResult(response);
     }
 
+    public Task<ChatResponse> GetResponseAsync(IEnumerable<ChatMessage> messages, ChatOptions? options = null, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
     public object? GetService(Type serviceType, object? serviceKey = null)
     {
         throw new NotImplementedException();
     }
 
     public IAsyncEnumerable<ChatResponseUpdate> GetStreamingResponseAsync(IList<ChatMessage> chatMessages, ChatOptions? options = null, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IAsyncEnumerable<ChatResponseUpdate> GetStreamingResponseAsync(IEnumerable<ChatMessage> messages, ChatOptions? options = null, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }

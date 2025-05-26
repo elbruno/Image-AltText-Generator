@@ -1,7 +1,10 @@
 ﻿using Clowd.Clipboard;
 using Microsoft.Extensions.AI;
 using Microsoft.ML.OnnxRuntimeGenAI;
+using OllamaSharp;
+using OllamaSharp.Models.Chat;
 using OpenAI;
+using System;
 using System.Reflection;
 using System.Text;
 using TextCopy;
@@ -79,7 +82,7 @@ Use Phi-4: {_settings.UseLocalOnnxModel}";
 
         List<ChatMessage> messages = new List<ChatMessage>
             {
-                new ChatMessage(ChatRole.User, @$"Generate a complete alt text description for the attached image. Be very descriptive with the image description. Include all the elements and content found in the image. Return only the alt text description, no other content.")
+                new ChatMessage(Microsoft.Extensions.AI.ChatRole.User, @$"Generate a complete alt text description for the attached image. Be very descriptive with the image description. Include all the elements and content found in the image. Return only the alt text description, no other content.")
             };
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -89,11 +92,11 @@ Use Phi-4: {_settings.UseLocalOnnxModel}";
             var chatOnnxLocal = new OnnxPhi4ChatClient(_settings.LocalOnnxModelPath);
 
             // when use local onnx model, we only pass the image location
-            messages.Add(new ChatMessage(ChatRole.User, [new DataContent(imageLocation, mediaType)]));
+            messages.Add(new ChatMessage(Microsoft.Extensions.AI.ChatRole.User, [new DataContent(imageLocation, mediaType)]));
 
             var imageAnalysis = await chatOnnxLocal.GetResponseAsync(messages);
             stringBuilder.AppendLine("Phi-4: ");
-            stringBuilder.AppendLine(imageAnalysis.Message.Text);
+            stringBuilder.AppendLine(imageAnalysis.Text);
             stringBuilder.AppendLine();
             Console.WriteLine($">> Phi-4 done");
             Console.WriteLine();
@@ -102,31 +105,34 @@ Use Phi-4: {_settings.UseLocalOnnxModel}";
         {
             Console.WriteLine($"Using Ollama: {_settings.OllamaModelId} - {_settings.OllamaUrl}");
 
-            var chatOllama = new OllamaChatClient(
-                new Uri(uriString: _settings.OllamaUrl),
-                _settings.OllamaModelId);
+            var uri = new Uri(_settings.OllamaUrl);
+            var ollama = new OllamaApiClient(uri);
+            ollama.SelectedModel = _settings.OllamaModelId;
+            var chat = new Chat(ollama);
 
-            // in ollama the image should be added as byte array
-            messages.Add(new ChatMessage(ChatRole.User, [new DataContent(imageBytes, mediaType)]));
+            var message = "Generate a complete alt text description for the attached image. Be very descriptive with the image description. Include all the elements and content found in the image. Return only the alt text description, no other content.";
+            string imgDescription = "";
+            // Convert the byte array to the required type: IEnumerable<IEnumerable<byte>>
+            var imageBytesEnumerable = new List<IEnumerable<byte>> { imageBytes };
 
-            var imageAnalysis = await chatOllama.GetResponseAsync(messages);
-            stringBuilder.AppendLine("Ollama: ");
-            stringBuilder.AppendLine(imageAnalysis.Message.Text);
-            stringBuilder.AppendLine();
+            await foreach (var answerToken in chat.SendAsync(message: message, imagesAsBytes: imageBytesEnumerable))            
+                stringBuilder.Append(answerToken);
+
             Console.WriteLine($">> Ollama done");
             Console.WriteLine();
         }
         if (_settings.UseOpenAI)
         {
             Console.WriteLine($"Using OpenAI, ApiKey length: {_settings.OpenAIKey.Length}");
-            var chatOpenAI = new OpenAI.OpenAIClient(apiKey: _settings.OpenAIKey).AsChatClient(_settings.OpenAIModelId);
+            var client = new OpenAI.OpenAIClient(apiKey: _settings.OpenAIKey);
+            var chatOpenAI = client.GetChatClient(_settings.OpenAIModelId).AsIChatClient();
 
             // when using OpenAI the image should be added as byte array
-            messages.Add(new ChatMessage(ChatRole.User, [new DataContent(imageBytes, mediaType)]));
+            messages.Add(new ChatMessage(Microsoft.Extensions.AI.ChatRole.User, [new DataContent(imageBytes, mediaType)]));
 
             var imageAnalysis = await chatOpenAI.GetResponseAsync(messages);
             stringBuilder.AppendLine("OpenAI: ");
-            stringBuilder.AppendLine(imageAnalysis.Message.Text);
+            stringBuilder.AppendLine(imageAnalysis.Text);
             stringBuilder.AppendLine();
             Console.WriteLine($">> OpenAI done");
             Console.WriteLine();
